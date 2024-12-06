@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 import asyncpg
 import os
 
@@ -16,6 +17,12 @@ class Prato(BaseModel):
     preco: float
     pessoas: int
 
+class PratoAtualizar(BaseModel):
+    nome: Optional[str] = None
+    descricao: Optional[str] = None
+    preco: Optional[float] = None
+    pessoas: Optional[int] = None
+
 class Pedido(BaseModel):
     cliente: str
     prato_id: int
@@ -26,23 +33,74 @@ class Pedido(BaseModel):
 # -----------------------------------------------  CRUD PRATOS ---------------------------------------------------------
 @app.post("api/v1/pratos/")
 async def criar_prato(prato: Prato):
-    return {"message": "Prato criado"}
+    conn = await get_database()
+    try:
+        query = "INSERT INTO pratos (nome, descricao, preco, pessoas) VALUES ($1, $2, $3, $4)"
+        async with conn.transaction():
+            result = await conn.execute(query, prato.nome, prato.descricao, prato.preco, prato.pessoas)
+            return {"message": "Prato criado"}
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
 @app.get("api/v1/pratos/")
 async def listar_pratos():
-    return {"message": "Lista de pratos"}
+    conn = await get_database()
+    try:
+        query = "SELECT * FROM pratos ORDER BY nome"
+        rows = await conn.fetch(query)
+        pratos = [dict(row) for row in rows]
+        return pratos
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
 @app.get("api/v1/pratos/{id}")
 async def listar_prato(id: int):
-    return {"message": f"Prato {id} encontrado"}
+    conn = await get_database()
+    try:
+        query = "SELECT * FROM pratos WHERE id = $1"
+        prato = await conn.fetchrow(query, id)
+        return dict(prato)
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
 @app.patch("api/v1/pratos/{id}")
-async def atualizar_prato(id: int, prato: Prato):
-    return {"message": f"Prato {id} atualizado"}
+async def atualizar_prato(id: int, prato: PratoAtualizar):
+    conn = await get_database()
+    try:
+        query = "SELECT * FROM pratos WHERE id = $1"
+        prato = await conn.fetchrow(query, id)
+        update = """
+            UPDATE pratos
+            SET nome = COALESCE($1, nome),
+            descricao = COALESCE($2, descricao),
+            preco = COALESCE($3, preco),
+            pessoas = COALESCE($4, pessoas),
+            WHERE id = COALESCE($5, id)
+        """
+        await conn.execute(update, prato.nome, prato.descricao, prato.preco, prato.pessoas, prato.id)
+        return {"message": "Prato atualizado"}
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
 @app.delete("/api/v1/pratos/{id}")
 async def deletar_prato(id: int):
-    return {"message": f"Prato {id} deletado"}
+    conn = await get_database()
+    try:
+        query = "DELETE FROM pratos WHERE id = $1"
+        prato = await conn.fetchrow(query, id)
+        return {"message": "Prato deletado"}
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
 # ----------------------------------------------- CRUD PEDIDOS ---------------------------------------------------------
 @app.post("api/v1/pedidos/")
