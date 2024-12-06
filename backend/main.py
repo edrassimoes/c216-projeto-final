@@ -105,7 +105,17 @@ async def deletar_prato(id: int):
 # ----------------------------------------------- CRUD PEDIDOS ---------------------------------------------------------
 @app.post("api/v1/pedidos/")
 async def criar_pedido(pedido: Pedido):
-    return {"message": "Pedido criado"}
+    conn = await get_database()
+    try:
+        query = 'SELECT * FROM pratos WHERE id = $1'
+        prato = await conn.fetchrow(query, pedido.id)
+        put = 'INSERT INTO pedidos (cliente, prato_id, endereco, forma_pagamento, horario) VALUES ($1, $2, $3, $4, $5)'
+        await conn.execute(put, pedido.cliente, pedido.id, pedido.endereco, pedido.forma_pagamento, pedido.horario)
+        return {"message": "Pedido criado"}
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
 @app.get("api/v1/pedidos/")
 async def listar_pedidos():
