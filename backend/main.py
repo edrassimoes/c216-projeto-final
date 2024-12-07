@@ -119,20 +119,43 @@ async def criar_pedido(pedido: Pedido):
 
 @app.get("api/v1/pedidos/")
 async def listar_pedidos():
-    return {"message": "Lista de pedidos"}
+    conn = await get_database()
+    try:
+        query = "SELECT * FROM pedidos"
+        rows = await conn.fetch(query)
+        pedidos = [dict(row) for row in rows]
+        return pedidos
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
 
+# Não será utilizada.
 @app.get("api/v1/pedidos/{id}")
 async def listar_pedido(id: int):
     return {"message": f"Pedido {id} encontrado"}
 
+# Não será utilizada.
 @app.patch("api/v1/pedidos/{id}")
 async def atualizar_pedido(id: int, pedido: Pedido):
     return {"message": f"Pedido {id} atualizado"}
 
+# Não será utilizada.
 @app.delete("/api/v1/pedidos/{id}")
 async def deletar_pedido(id: int):
     return {"message": f"Pedido {id} deletado"}
+
 # ----------------------------------------------- RESET DO BANCO -------------------------------------------------------
 @app.delete("/api/v1/pratos/")
 async def reset_data():
-    return {"message": "Banco de dados resetado"}
+    init_sql = os.getenv('INIT_SQL', '../postgresql/init.sql')
+    conn = await get_database()
+    try:
+        with open(init_sql, 'r') as f:
+            sql_commands = f.read()
+        await conn.execute(sql_commands)
+        return {"message": "Banco reiniciado com sucesso!"}
+    except Exception as e:
+        return {"message": str(e)}
+    finally:
+        await conn.close()
