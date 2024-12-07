@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      PGURL: "postgres://postgres:postgres@db:5432/restaurantes"
+
+  db:
+    build:
+      context: ./postgresql
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: restaurantes
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: "http://backend:8000"
+
+volumes:
+  pg_data:

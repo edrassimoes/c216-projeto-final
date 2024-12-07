@@ -6,8 +6,12 @@ import asyncpg
 import os
 
 async def get_database():
-    DATABASE_URL = os.environ.get("PGURL", "postgres://postgres:postgres@db:5432/jogos")
-    return await asyncpg.connect(DATABASE_URL)
+    DATABASE_URL = os.environ.get("PGURL", "postgres://postgres:postgres@db:5432/restaurantes")
+    try:
+        conn = await asyncpg.connect(DATABASE_URL)
+        return conn
+    except Exception as e:
+        raise Exception(f"Erro ao conectar ao banco de dados: {e}")
 
 app = FastAPI()
 
