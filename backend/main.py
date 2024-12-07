@@ -31,7 +31,7 @@ class Pedido(BaseModel):
     horario: datetime = datetime.now()
 
 # -----------------------------------------------  CRUD PRATOS ---------------------------------------------------------
-@app.post("api/v1/pratos/")
+@app.post("/api/v1/pratos/")
 async def criar_prato(prato: Prato):
     conn = await get_database()
     try:
@@ -40,11 +40,11 @@ async def criar_prato(prato: Prato):
             result = await conn.execute(query, prato.nome, prato.descricao, prato.preco, prato.pessoas)
             return {"message": "Prato criado"}
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
-@app.get("api/v1/pratos/")
+@app.get("/api/v1/pratos/")
 async def listar_pratos():
     conn = await get_database()
     try:
@@ -53,11 +53,11 @@ async def listar_pratos():
         pratos = [dict(row) for row in rows]
         return pratos
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
-@app.get("api/v1/pratos/{id}")
+@app.get("/api/v1/pratos/{id}")
 async def listar_prato(id: int):
     conn = await get_database()
     try:
@@ -65,28 +65,28 @@ async def listar_prato(id: int):
         prato = await conn.fetchrow(query, id)
         return dict(prato)
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
-@app.patch("api/v1/pratos/{id}")
+@app.patch("/api/v1/pratos/{id}")
 async def atualizar_prato(id: int, prato: PratoAtualizar):
     conn = await get_database()
     try:
         query = "SELECT * FROM pratos WHERE id = $1"
         prato = await conn.fetchrow(query, id)
         update = """
-            UPDATE pratos
-            SET nome = COALESCE($1, nome),
+            UPDATE pratos SET 
+            nome = COALESCE($1, nome),
             descricao = COALESCE($2, descricao),
             preco = COALESCE($3, preco),
-            pessoas = COALESCE($4, pessoas),
-            WHERE id = COALESCE($5, id)
+            pessoas = COALESCE($4, pessoas)
+            WHERE id = $5
         """
         await conn.execute(update, prato.nome, prato.descricao, prato.preco, prato.pessoas, prato.id)
         return {"message": "Prato atualizado"}
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
@@ -98,12 +98,12 @@ async def deletar_prato(id: int):
         prato = await conn.fetchrow(query, id)
         return {"message": "Prato deletado"}
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
 # ----------------------------------------------- CRUD PEDIDOS ---------------------------------------------------------
-@app.post("api/v1/pedidos/")
+@app.post("/api/v1/pedidos/")
 async def criar_pedido(pedido: Pedido):
     conn = await get_database()
     try:
@@ -113,11 +113,11 @@ async def criar_pedido(pedido: Pedido):
         await conn.execute(put, pedido.cliente, pedido.id, pedido.endereco, pedido.forma_pagamento, pedido.horario)
         return {"message": "Pedido criado"}
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
-@app.get("api/v1/pedidos/")
+@app.get("/api/v1/pedidos/")
 async def listar_pedidos():
     conn = await get_database()
     try:
@@ -126,17 +126,17 @@ async def listar_pedidos():
         pedidos = [dict(row) for row in rows]
         return pedidos
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
 
 # Não será utilizada.
-@app.get("api/v1/pedidos/{id}")
+@app.get("/api/v1/pedidos/{id}")
 async def listar_pedido(id: int):
     return {"message": f"Pedido {id} encontrado"}
 
 # Não será utilizada.
-@app.patch("api/v1/pedidos/{id}")
+@app.patch("/api/v1/pedidos/{id}")
 async def atualizar_pedido(id: int, pedido: Pedido):
     return {"message": f"Pedido {id} atualizado"}
 
@@ -156,6 +156,6 @@ async def reset_data():
         await conn.execute(sql_commands)
         return {"message": "Banco reiniciado com sucesso!"}
     except Exception as e:
-        return {"message": str(e)}
+        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
     finally:
         await conn.close()
