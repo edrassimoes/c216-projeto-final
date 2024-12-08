@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from datetime import datetime
 from typing import Optional
 import asyncpg
 import os
@@ -32,7 +31,7 @@ class Pedido(BaseModel):
     prato_id: int
     endereco: str
     forma_pagamento: str
-    horario: datetime = datetime.now()
+    horario: str
 
 # -----------------------------------------------  CRUD PRATOS ---------------------------------------------------------
 @app.post("/api/v1/pratos/")

@@ -21,9 +21,12 @@
 </nav>
 <div class="container mt-4">
     <h1>Pedidos</h1>
-    <div class="final-da-linha">
-        <button type="submit" class="btn btn-primary">Gerar um pedido</button>
-    </div>
+    <!-- Formulário fake com apenas o botão para gerar o pedido -->
+    <form action="{{ url_for('pedido') }}" method="POST">
+        <div class="final-da-linha">
+            <button type="submit" class="btn btn-primary">Gerar um pedido</button>
+        </div>
+    </form>
     <table class="table table-bordered">
         <thead>
             <tr>
