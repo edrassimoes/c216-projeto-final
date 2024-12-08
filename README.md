@@ -8,13 +8,13 @@ O projeto em questão foi uma sujestão do monitor da disciplina e se trata de u
 - Para executar o projeto basta clonar o repositório:
 
 ```
-git clone https://github.com/GustavoFLuz/Projeto-C216.git
+git clone https://github.com/edrassimoes/c216-projeto-final.git
 ```
 
 - Entrar na pasta do projeto:
 
 ```
-cd Projeto-C216
+cd c216-projeto-final
 ```
 - E executar o comando:
 
