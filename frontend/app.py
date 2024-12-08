@@ -1,8 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime
-from faker import Faker
 import requests
-import random
 import os
 
 app = Flask(__name__)
@@ -19,67 +16,46 @@ def cardapio():
     pratos = response.json()
     return render_template('cardapio.html', pratos=pratos)
 
-@app.route('/criar_prato', methods=['POST'])
+@app.route('/criar_prato', methods=['GET','POST'])
 def criar_prato():
-    nome = request.form['nome']
-    descricao = request.form['descricao']
-    preco = float(request.form['preco'])
-    pessoas = int(request.form['pessoas'])
+    if request.method == 'POST':
+        nome = request.form['nome']
+        descricao = request.form['descricao']
+        preco = float(request.form['preco'])
+        pessoas = int(request.form['pessoas'])
 
-    prato_data = {
-        "nome": nome,
-        "descricao": descricao,
-        "preco": preco,
-        "pessoas": pessoas
+        prato_data = {
+            "nome": nome,
+            "descricao": descricao,
+            "preco": preco,
+            "pessoas": pessoas
         }
 
-    response = requests.post(f"{BASE_URL}/pratos/", json=prato_data)
+        response = requests.post(f"{BASE_URL}/pratos/", json=prato_data)
 
-    if response.status_code == 200:
-        return redirect(url_for('cardapio'))
+        if response.status_code == 200:
+            return redirect(url_for('cardapio'))
+        else:
+            return "Erro ao criar o prato", 500
+
     else:
-        return "Erro ao criar o prato", 500
+        return render_template('criar_prato.html')
 
 @app.route('/pedidos')
 def pedidos():
     response = requests.get(f"{BASE_URL}/pedidos/")
-    pedidos = response.json()
-    return render_template('pedidos.html', pedidos=pedidos)
+    lista = response.json()
+    return render_template('pedidos.html', pedidos=lista)
 
-@app.route('/pedidos', methods=['POST'])
-def criar_pedido():
-    formas_de_pagamento = ['dinheiro', 'cartao', 'pix']
-    fake = Faker('pt_BR')
+@app.route('/reset_database', methods=['GET'])
+def reset_database():
+    response = requests.delete(f"{BASE_URL}/pratos/")
 
-    cliente = fake.name()
-    endereco = fake.address()
-    forma_de_pagamento = random.choice(formas_de_pagamento)
-    horario = datetime.now().strftime("%d/%m/%Y")
-
-    response_pratos = requests.get(f"{BASE_URL}/pratos/")
-
-    if response_pratos.status_code == 200:
-        pratos = response_pratos.json()
-        prato_id = random.choice(pratos)['id']
+    if response.status_code == 200:
+        return render_template('index.html')
     else:
-        return "Erro ao buscar pratos", 500
-
-    # Dados do pedido
-    pedido_data = {
-        "cliente": cliente,
-        "prato_id": prato_id,
-        "endereco": endereco,
-        "forma_de_pagamento": forma_de_pagamento,
-        "horario": horario
-    }
-
-    response_pedido = requests.post(f"{BASE_URL}/pedidos/", json=pedido_data)
-
-    if response_pedido.status_code == 200:
-        return redirect(url_for('pedidos'))
-    else:
-        return "Erro ao criar o pedido", 500
-
+        return "Erro ao resetar o database", 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
+

@@ -6,11 +6,7 @@ import os
 
 async def get_database():
     DATABASE_URL = os.environ.get("PGURL", "postgres://postgres:postgres@db:5432/restaurantes")
-    try:
-        conn = await asyncpg.connect(DATABASE_URL)
-        return conn
-    except Exception as e:
-        raise Exception(f"Erro ao conectar ao banco de dados: {e}")
+    return await asyncpg.connect(DATABASE_URL)
 
 app = FastAPI()
 
@@ -106,22 +102,14 @@ async def deletar_prato(id: int):
         await conn.close()
 
 # ----------------------------------------------- CRUD PEDIDOS ---------------------------------------------------------
+
+# Não será utilizada.
 @app.post("/api/v1/pedidos/")
-async def criar_pedido(pedido: Pedido):
-    conn = await get_database()
-    try:
-        query = 'SELECT * FROM pratos WHERE id = $1'
-        prato = await conn.fetchrow(query, pedido.id)
-        put = 'INSERT INTO pedidos (cliente, prato_id, endereco, forma_pagamento, horario) VALUES ($1, $2, $3, $4, $5)'
-        await conn.execute(put, pedido.cliente, pedido.id, pedido.endereco, pedido.forma_pagamento, pedido.horario)
-        return {"message": "Pedido criado"}
-    except Exception as e:
-        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
-    finally:
-        await conn.close()
+async def criar_pedido(id: int):
+    return {"message": f"Pedido {id} criado"}
 
 @app.get("/api/v1/pedidos/")
-async def listar_pedidos():
+async def get_pedidos():
     conn = await get_database()
     try:
         query = "SELECT * FROM pedidos"
