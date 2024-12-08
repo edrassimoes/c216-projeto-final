@@ -1,2 +1,2 @@
-# c216-projeto-final
-Repositório destinado ao projeto final do laboratório da disciplina Sistemas Distribuídos - C216.
+# Sistema de Gestão de Restaurantes
+Este repositório é destinado ao projeto final do laboratório da disciplina Sistemas Distribuídos - C216.
