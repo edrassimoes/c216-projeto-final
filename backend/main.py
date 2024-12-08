@@ -151,3 +151,5 @@ async def reset_data():
         return {"message": "Banco de dados limpo com sucesso!"}
     finally:
         await conn.close()
+
+reset_data()
