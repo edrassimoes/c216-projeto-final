@@ -68,24 +68,25 @@ async def listar_prato(id: int):
     finally:
         await conn.close()
 
+
 @app.patch("/api/v1/pratos/{id}")
-async def atualizar_prato(id: int, prato: PratoAtualizar):
+async def atualizar_prato(id: int, dados_atualizar: PratoAtualizar):
     conn = await get_database()
     try:
         query = "SELECT * FROM pratos WHERE id = $1"
         prato = await conn.fetchrow(query, id)
         update = """
             UPDATE pratos SET 
-            nome = COALESCE($1, nome),
-            descricao = COALESCE($2, descricao),
-            preco = COALESCE($3, preco),
-            pessoas = COALESCE($4, pessoas)
-            WHERE id = $5
+            nome = COALESCE($2, nome),
+            descricao = COALESCE($3, descricao),
+            preco = COALESCE($4, preco),
+            pessoas = COALESCE($5, pessoas)
+            WHERE id = $1
         """
-        await conn.execute(update, prato.nome, prato.descricao, prato.preco, prato.pessoas, prato.id)
+        await conn.execute(update, id, dados_atualizar.nome, dados_atualizar.descricao,dados_atualizar.preco, dados_atualizar.pessoas)
         return {"message": "Prato atualizado"}
     except Exception as e:
-        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
+        return {"message": f"Ocorreu um erro. Tente novamente mais tarde. Erro: {str(e)}"}
     finally:
         await conn.close()
 
@@ -93,11 +94,13 @@ async def atualizar_prato(id: int, prato: PratoAtualizar):
 async def deletar_prato(id: int):
     conn = await get_database()
     try:
-        query = "DELETE FROM pratos WHERE id = $1"
-        prato = await conn.fetchrow(query, id)
-        return {"message": "Prato deletado"}
+        delete_pedidos_query = "DELETE FROM pedidos WHERE prato_id = $1 "
+        await conn.execute(delete_pedidos_query, id)
+        delete_prato_query = "DELETE FROM pratos WHERE id = $1"
+        await conn.execute(delete_prato_query, id)
+        return {"message": "Prato e seus pedidos vinculados foram deletados com sucesso"}
     except Exception as e:
-        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
+        return {"message": f"Ocorreu um erro: {str(e)}"}
     finally:
         await conn.close()
 
@@ -139,14 +142,12 @@ async def deletar_pedido(id: int):
 # ----------------------------------------------- RESET DO BANCO -------------------------------------------------------
 @app.delete("/api/v1/pratos/")
 async def reset_data():
-    init_sql = os.getenv('INIT_SQL', '../postgresql/init.sql')
+    init_sql = os.getenv("INIT_SQL", "postgresql/init.sql")
     conn = await get_database()
     try:
-        with open(init_sql, 'r') as f:
-            sql_commands = f.read()
+        with open(init_sql, 'r') as file:
+            sql_commands = file.read()
         await conn.execute(sql_commands)
-        return {"message": "Banco reiniciado com sucesso!"}
-    except Exception as e:
-        return {"message": "Ocorreu um erro. Tente novamente mais tarde."}
+        return {"message": "Banco de dados limpo com sucesso!"}
     finally:
         await conn.close()

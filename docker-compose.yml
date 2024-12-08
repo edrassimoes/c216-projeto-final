@@ -10,7 +10,7 @@ services:
       PGURL: "postgres://postgres:postgres@db:5432/restaurantes"
 
   db:
-    build: ./postgresql
+    image: postgres
     restart: always
     ports:
       - "5432:5432"

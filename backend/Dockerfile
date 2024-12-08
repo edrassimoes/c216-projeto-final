@@ -7,6 +7,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY main.py .
+COPY ./postgresql ./postgresql
 
 EXPOSE 8000
 
