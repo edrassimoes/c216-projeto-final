@@ -1,0 +1,287 @@
+{
+	"id": "c545f8aa-a820-4dee-b4b6-672ec8b96109",
+	"name": "C216-L1-PROJETO-FINAL-Edras_GES133",
+	"timestamp": "2024-12-08T03:41:56.027Z",
+	"collection_id": "32899336-5c785d07-40e0-4b75-8c3d-fc8dd2260e59",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 15,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2024-12-08T03:41:54.677Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "f174b36e-323e-456a-99f6-7b4017ed3bb2",
+			"name": "criar prato",
+			"url": "http://localhost:8000/api/v1/pratos/",
+			"time": 116,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should contain confirmation message": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should contain confirmation message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				116
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should contain confirmation message": true
+				}
+			]
+		},
+		{
+			"id": "c734ed6a-4c23-49ba-a22f-ea3404a6e2c5",
+			"name": "listar pratos",
+			"url": "http://localhost:8000/api/v1/pratos/",
+			"time": 115,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should be an array": true,
+				"Each item should contain prato details": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an array": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Each item should contain prato details": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				115
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should be an array": true,
+					"Each item should contain prato details": true
+				}
+			]
+		},
+		{
+			"id": "e083d043-8280-487d-83d1-3e4e7f6096f1",
+			"name": "buscar prato id",
+			"url": "http://localhost:8000/api/v1/pratos/1",
+			"time": 100,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should contain prato details": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should contain prato details": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				100
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should contain prato details": true
+				}
+			]
+		},
+		{
+			"id": "263cd1b5-64db-4015-aec4-db51b6ba924c",
+			"name": "atualizar prato",
+			"url": "http://localhost:8000/api/v1/pratos/1",
+			"time": 98,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should contain confirmation message": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should contain confirmation message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				98
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should contain confirmation message": true
+				}
+			]
+		},
+		{
+			"id": "5ac61ea8-071d-4d42-b449-65a31a8aadb4",
+			"name": "deletar prato",
+			"url": "http://localhost:8000/api/v1/pratos/1",
+			"time": 99,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should contain confirmation message": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should contain confirmation message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				99
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should contain confirmation message": true
+				}
+			]
+		},
+		{
+			"id": "495afa27-de6b-4f27-b4ac-de2213a681b7",
+			"name": "listar pedidos",
+			"url": "http://localhost:8000/api/v1/pedidos/",
+			"time": 91,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should be an array": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an array": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				91
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should be an array": true
+				}
+			]
+		},
+		{
+			"id": "005ecd2e-b938-4f1a-aadd-3252fe6a931e",
+			"name": "reiniciar banco",
+			"url": "http://localhost:8000/api/v1/pratos/",
+			"time": 139,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response should contain reset confirmation message": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should contain reset confirmation message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				139
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response should contain reset confirmation message": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 758,
+	"collection": {
+		"requests": [
+			{
+				"id": "f174b36e-323e-456a-99f6-7b4017ed3bb2",
+				"method": "POST"
+			},
+			{
+				"id": "c734ed6a-4c23-49ba-a22f-ea3404a6e2c5",
+				"method": "GET"
+			},
+			{
+				"id": "e083d043-8280-487d-83d1-3e4e7f6096f1",
+				"method": "GET"
+			},
+			{
+				"id": "263cd1b5-64db-4015-aec4-db51b6ba924c",
+				"method": "PATCH"
+			},
+			{
+				"id": "5ac61ea8-071d-4d42-b449-65a31a8aadb4",
+				"method": "DELETE"
+			},
+			{
+				"id": "495afa27-de6b-4f27-b4ac-de2213a681b7",
+				"method": "GET"
+			},
+			{
+				"id": "005ecd2e-b938-4f1a-aadd-3252fe6a931e",
+				"method": "DELETE"
+			}
+		]
+	}
+}
